@@ -72,6 +72,7 @@ pipeline{
             steps{
                 withAWS(credentials: 'mycredentials', region: 'us-east-1') {
                     script {
+                        env.ZONE_ID = sh(script:"aws route53 list-hosted-zones-by-name --dns-name $DOMAIN_NAME --query HostedZones[].Id --output text | cut -d/ -f3", returnStdout:true).trim()
                         env.SSL_CERT_ARN = sh(script:"aws acm list-certificates --query CertificateSummaryList[].[CertificateArn,DomainName]   --output text | grep $FQDN | cut -f1", returnStdout:true).trim()
                         env.SSL_CERT_NAME = sh(script:"aws acm describe-certificate --certificate-arn $SSL_CERT_ARN --query Certificate.DomainValidationOptions --output text | tail -n 1 | cut -f2", returnStdout:true).trim()
                         env.SSL_CERT_VALUE = sh(script:"aws acm describe-certificate --certificate-arn $SSL_CERT_ARN --query Certificate.DomainValidationOptions --output text | tail -n 1 | cut -f4", returnStdout:true).trim()   
