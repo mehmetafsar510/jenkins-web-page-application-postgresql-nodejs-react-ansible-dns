@@ -22,6 +22,7 @@ module "compute" {
   key_name            = var.key_name
   lb_target_group_arn = module.loadbalancing.lb_target_group_arn
   tg_port             = 3000
+  security_groups = module.loadbalancing.sg_group
 }
 
 module "loadbalancing" {

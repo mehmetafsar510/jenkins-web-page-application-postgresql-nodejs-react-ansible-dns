@@ -128,7 +128,7 @@ resource "aws_security_group" "matt-react-sg" {
     protocol = "tcp"
     from_port = 3000
     to_port = 3000
-    cidr_blocks = ["0.0.0.0/0"]
+    security_groups = var.security_groups
   }
   ingress {
     protocol = "tcp"
