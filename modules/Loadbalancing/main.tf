@@ -24,16 +24,6 @@ resource "aws_lb_target_group" "mtc_tg" {
   }
 }
 
-resource "aws_lb_listener" "mtc_lb_listener" {
-  load_balancer_arn = aws_lb.mtc_lb.arn
-  port              = var.listener_port
-  protocol          = var.listener_protocol
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.mtc_tg.arn
-  }
-}
-
 resource "aws_lb_listener" "front_end-https" {
   load_balancer_arn = aws_lb.mtc_lb.arn
   port              = var.listener_port
