@@ -102,7 +102,7 @@ pipeline{
             agent any
             steps{
                 withAWS(credentials: 'mycredentials', region: 'us-east-1') {
-                    sh "sed -i 's|{{carn}}|$SSL_CERT_ARN |g' main.tf"
+                    sh "sed -i 's|{{carn}}|$SSL_CERT_ARN|g' main.tf"
                     sh "terraform init" 
                     sh "terraform apply -input=false -auto-approve"
                 }    
