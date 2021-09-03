@@ -191,7 +191,7 @@ pipeline{
             steps{
                 withAWS(credentials: 'mycredentials', region: 'us-east-1') {
                     script {
-                        env.ELB_DNS = sh(script:"aws elbv2 describe-load-balancers --query LoadBalancers[].DNSName | cut -d '\"' -f 2 | tail -n 2 | cut -d '\]' -f 2", returnStdout:true).trim()
+                        env.ELB_DNS = sh(script:"aws elbv2 describe-load-balancers --query LoadBalancers[].DNSName | cut -d '\"' -f 2 | tail -n 2 | cut -d ']' -f 2", returnStdout:true).trim()
                         env.ZONE_ID = sh(script:"aws route53 list-hosted-zones-by-name --dns-name $DOMAIN_NAME --query HostedZones[].Id --output text | cut -d/ -f3", returnStdout:true).trim()   
                     }
                     sh "sed -i 's|{{DNS}}|dualstack.$ELB_DNS|g' dnsrecord.json"
