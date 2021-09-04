@@ -93,7 +93,7 @@ resource "aws_alb_listener_rule" "listener_rule2" {
   }
   condition {
     path_pattern {
-      values = ["/app"]
+      values = ["/app","/app/todos"]
     }
   }
 }
