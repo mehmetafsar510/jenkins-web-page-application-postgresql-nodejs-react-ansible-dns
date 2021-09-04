@@ -78,12 +78,6 @@ app.delete("/todos/:id", async (req, res) => {
   }
 });
 
-var privateKey = fs.readFileSync( 'privatekey.pem' );
-var certificate = fs.readFileSync( 'certificate.pem' );
-
-https.createServer({
-    key: privateKey,
-    cert: certificate
-},app).listen(process.env.SERVER_PORT, () => {
+app.listen(process.env.SERVER_PORT, () => {
   console.log(`Server running on http://localhost:${process.env.SERVER_PORT}`);
 });
