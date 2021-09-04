@@ -50,7 +50,7 @@ resource "aws_lb_listener" "front_end-https" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.mtc_tg_1.arn
+    target_group_arn = aws_lb_target_group.mtc_tg.arn
   }
 }
 
@@ -70,13 +70,13 @@ resource "aws_lb_listener" "front_end-http" {
   }
 }
 
-resource "aws_alb_listener_rule" "listener_rule1" {
-  listener_arn = aws_lb_listener.front_end-https.arn
-  priority     = "1"
-  action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.mtc_tg_1.id
-  }
+resource "aws_alb_listener_rule" "listener_rule1" {  
+  listener_arn = "${aws_lb_listener.front_end-https.arn}"  
+  priority     = "1"   
+  action {    
+    type             = "forward"    
+    target_group_arn = "${aws_lb_target_group.mtc_tg_1.id}"  
+  }   
   condition {
     path_pattern {
       values = ["/"]
@@ -85,45 +85,45 @@ resource "aws_alb_listener_rule" "listener_rule1" {
 }
 
 resource "aws_alb_listener_rule" "listener_rule2" {
-  listener_arn = aws_lb_listener.front_end-https.arn
-  priority     = "2"
-  action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.mtc_tg_2.id
-  }
+  listener_arn = "${aws_lb_listener.front_end-https.arn}"  
+  priority     = "2"   
+  action {    
+    type             = "forward"    
+    target_group_arn = "${aws_lb_target_group.mtc_tg_2.id}"  
+  }   
   condition {
     path_pattern {
-      values = ["/app","/app/todos"]
+      values = ["/todos"]
     }
   }
 }
 
 resource "aws_security_group" "matt_lb_sg" {
-  name   = "lb-sec-group-for-matt"
+  name = "lb-sec-group-for-matt"
   vpc_id = var.vpc_id
 
   ingress {
-    protocol    = "tcp"
-    from_port   = 22
-    to_port     = 22
+    protocol = "tcp"
+    from_port = 22
+    to_port = 22
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    protocol    = "tcp"
-    from_port   = 80
-    to_port     = 80
+    protocol = "tcp"
+    from_port = 80
+    to_port = 80
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    protocol    = "tcp"
-    from_port   = 443
-    to_port     = 443
+    protocol = "tcp"
+    from_port = 443
+    to_port = 443
     cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
-    protocol    = "-1"
-    from_port   = 0
-    to_port     = 0
+    protocol = "-1"
+    from_port = 0
+    to_port = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
