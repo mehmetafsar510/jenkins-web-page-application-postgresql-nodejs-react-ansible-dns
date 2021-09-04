@@ -1,10 +1,10 @@
 output "nodejs-ip" {
-  value       = module.compute.nodejs-ip
+  value       = { for i in module.compute.nodejs-ip : i.tags.Name => "${i.public_ip}" }
   sensitive   = false
   description = "public ip of the nodejs"
 }
 
-output "instances" {
+output "react-ip" {
   value       = { for i in module.compute.react-ip : i.tags.Name => "${i.public_ip}" }
   sensitive   = false
   description = "public ip of the react"

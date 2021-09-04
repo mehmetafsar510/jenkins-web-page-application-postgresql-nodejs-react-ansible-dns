@@ -13,22 +13,25 @@ module "network" {
 }
 
 module "compute" {
-  source              = "./modules/Compute"
-  instance_count      = 1
-  vpc_id              = module.network.vpc_id
-  public_subnets      = module.network.public_subnet[0]
-  master_profile_name = module.iam.master_profile_name
-  worker_profile_name = module.iam.worker_profile_name
-  key_name            = var.key_name
-  lb_target_group_arn = module.loadbalancing.lb_target_group_arn
-  tg_port             = 3000
-  security_groups = module.loadbalancing.sg_group
+  source               = "./modules/Compute"
+  instance_count       = 1
+  vpc_id               = module.network.vpc_id
+  public_subnets       = module.network.public_subnet[0]
+  master_profile_name  = module.iam.master_profile_name
+  worker_profile_name  = module.iam.worker_profile_name
+  key_name             = var.key_name
+  lb_target_group_arn1 = module.loadbalancing.lb_target_group_arn1
+  lb_target_group_arn2 = module.loadbalancing.lb_target_group_arn2
+  tg_port1             = 3000
+  tg_port2             = 5000
+  security_groups      = module.loadbalancing.sg_group
 }
 
 module "loadbalancing" {
   source                  = "./modules/Loadbalancing"
   public_subnets          = module.network.public_subnet
-  tg_port                 = 3000
+  tg_port1                = 3000
+  tg_port2                = 5000
   tg_protocol             = "HTTP"
   vpc_id                  = module.network.vpc_id
   elb_healthy_threshold   = 2

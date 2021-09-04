@@ -1,5 +1,5 @@
 output "nodejs-ip" {
-  value       = aws_instance.nodejs.public_ip
+  value       = aws_instance.nodejs[*]
   sensitive   = false
   description = "public ip of the nodejs"
 }
