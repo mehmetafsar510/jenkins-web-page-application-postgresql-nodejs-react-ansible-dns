@@ -110,14 +110,14 @@ pipeline{
 
         stage('Control the nodejs instance') {
             steps {
-                echo 'Control the  postgresql instance'
+                echo 'Control the  nodejs instance'
             script {
                 while(true) {
                         
                         echo "NOdejs is not UP and running yet. Will try to reach again after 10 seconds..."
                         sleep(5)
 
-                        ip = sh(script:'aws ec2 describe-instances --region ${AWS_REGION} --filters Name=tag-value,Values=ansible_nodejs  --query Reservations[*].Instances[*].[PublicDnsName] --output text | sed "s/\\s*None\\s*//g"', returnStdout:true).trim()
+                        ip = sh(script:"aws elbv2 describe-load-balancers --query LoadBalancers[].DNSName | cut -d '\"' -f 2 | tail -n 2 | cut -d ']' -f 2", returnStdout:true).trim()
 
                         if (ip.length() >= 7) {
                             echo "Nodejs Public Ip Address Found: $ip"

@@ -79,5 +79,5 @@ app.delete("/todos/:id", async (req, res) => {
 });
 
 app.listen(process.env.SERVER_PORT, () => {
-  console.log(`Server running on http://localhost:${process.env.SERVER_PORT}`);
+  console.log(`Server running on https://localhost:${process.env.SERVER_PORT}`);
 });
