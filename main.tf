@@ -13,18 +13,18 @@ module "network" {
 }
 
 module "compute" {
-  source              = "./modules/Compute"
-  instance_count      = 1
-  vpc_id              = module.network.vpc_id
-  public_subnets      = module.network.public_subnet[0]
-  master_profile_name = module.iam.master_profile_name
-  worker_profile_name = module.iam.worker_profile_name
-  key_name            = var.key_name
+  source               = "./modules/Compute"
+  instance_count       = 1
+  vpc_id               = module.network.vpc_id
+  public_subnets       = module.network.public_subnet[0]
+  master_profile_name  = module.iam.master_profile_name
+  worker_profile_name  = module.iam.worker_profile_name
+  key_name             = var.key_name
   lb_target_group_arn1 = module.loadbalancing.lb_target_group_arn1
   lb_target_group_arn2 = module.loadbalancing.lb_target_group_arn2
   tg_port1             = 3000
   tg_port2             = 5000
-  security_groups = module.loadbalancing.sg_group
+  security_groups      = module.loadbalancing.sg_group
 }
 
 module "loadbalancing" {
