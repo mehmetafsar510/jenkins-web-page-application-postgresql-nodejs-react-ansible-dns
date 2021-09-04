@@ -169,12 +169,12 @@ pipeline{
                     script {
                         
                         env.ZONE_ID = sh(script:"aws route53 list-hosted-zones-by-name --dns-name $DOMAIN_NAME --query HostedZones[].Id --output text | cut -d/ -f3", returnStdout:true).trim()
-                        env.ELB_DNS = sh(script:"aws route53 list-resource-record-sets --hosted-zone-id $ZONE_ID --query \'ResourceRecordSets[?Name == `clarus.mehmetafsar.com.`]\' --output text | tail -n 1 | cut -f2", returnStdout:true).trim()  
+                        env.ELB_DNS = sh(script:"aws route53 list-resource-record-sets --hosted-zone-id $ZONE_ID --query \"ResourceRecordSets[?Name == '$FQDN.']\" --output text | tail -n 1 | cut -f2", returnStdout:true).trim()  
                     }
                     sh "sed -i 's|{{DNS}}|$ELB_DNS|g' deleterecord.json"
                     sh "sed -i 's|{{FQDN}}|$FQDN|g' deleterecord.json"
                     sh '''
-                        RecordSet=$(aws route53 list-resource-record-sets   --hosted-zone-id $ZONE_ID   --query \'ResourceRecordSets[?Name == `clarus.mehmetafsar.com.`]\' --output text | tail -n 1 | cut -f2) || true
+                        RecordSet=$(aws route53 list-resource-record-sets   --hosted-zone-id $ZONE_ID   --query \"ResourceRecordSets[?Name == '$FQDN.']\" --output text | tail -n 1 | cut -f2) || true
                         if [ "$RecordSet" != '' ]
                         then
                             aws route53 change-resource-record-sets --hosted-zone-id $ZONE_ID --change-batch file://deleterecord.json
