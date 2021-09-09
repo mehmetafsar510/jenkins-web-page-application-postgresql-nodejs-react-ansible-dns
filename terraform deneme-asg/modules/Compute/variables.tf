@@ -1,0 +1,11 @@
+variable "vpc_id" {}
+variable "public_subnets" {}
+variable "master_profile_name" {}
+variable "worker_profile_name" {}
+variable "key_name" {}
+variable "tg_port1" {}
+variable "tg_port2" {}
+variable "lb_target_group_arn1" {}
+variable "lb_target_group_arn2" {}
+variable "instance_count" {}
+variable "security_groups" {}
