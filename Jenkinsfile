@@ -9,18 +9,15 @@ pipeline{
         GIT_FOLDER = sh(script:'echo ${GIT_URL} | sed "s/.*\\///;s/.git$//"', returnStdout:true).trim()
     }
     stages{
-        stage('Setup terraform ansible  binaries') {
+        stage('Setup terraform binaries') {
             steps {
               script {
 
-                println "Setup teraform ansible  binaries..."
+                println "Setup teraform binaries..."
                 sh """
                   sudo yum install -y yum-utils
                   sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
                   sudo yum -y install terraform
-                  pip3 install --user ansible
-                  pip3 install --user boto3 botocore
-                  sudo yum install python-boto3 -y
                 """
               }
             }
@@ -43,6 +40,9 @@ pipeline{
                         chmod 400 ${CFN_KEYPAIR}.pem
 
                         ssh-keygen -y -f ${CFN_KEYPAIR}.pem >> the_doctor_public.pem
+                        mkdir -p ${JENKINS_HOME}/.ssh
+                        cp -f ${CFN_KEYPAIR}.pem ${JENKINS_HOME}/.ssh
+                        chown jenkins:jenkins ${JENKINS_HOME}/.ssh/${CFN_KEYPAIR}.pem
                     fi
                 '''                
             }
@@ -101,6 +101,7 @@ pipeline{
             agent any
             steps{
                 withAWS(credentials: 'mycredentials', region: 'us-east-1') {
+                    sh "sed -i 's|{{key}}|${CFN_KEYPAIR}|g' variable.tf"
                     sh "sed -i 's|{{carn}}|$SSL_CERT_ARN|g' main.tf"
                     sh "terraform init" 
                     sh "terraform apply -input=false -auto-approve"
@@ -157,8 +158,7 @@ pipeline{
                     sh "sed -i 's|{{key_pair}}|${CFN_KEYPAIR}.pem|g' ansible.cfg"
                     sh "sed -i 's|{{nodejs_dns_name}}|$NODEJS_INSTANCE_PUBLIC_DNS|g' todo-app-pern/client/.env"
                     sh "sed -i 's|{{postgresql_internal_private_dns}}|$POSTGRESQL_INSTANCE_PRİVATE_DNS|g' todo-app-pern/server/.env"
-                    sh "sed -i 's|{{workspace}}|${WORKSPACE}|g' docker_project.yml"
-                    sh "sudo ansible-playbook docker_project.yml"
+                    sh 'ansible-playbook --extra-vars "workspace=${WORKSPACE}" docker_project.yml'
             }
         }
 
