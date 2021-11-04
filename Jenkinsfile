@@ -148,6 +148,18 @@ pipeline{
                             break
                         }
                     }
+                while(true) {
+                        ip = sh(script:'aws ec2 describe-instances --region ${AWS_REGION} --filters Name=tag-value,Values=ansible_postgresql  --query Reservations[*].Instances[*].[PublicDnsName] --output text | sed "s/\\s*None\\s*//g"', returnStdout:true).trim()
+                        try{
+                            sh 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${JENKINS_HOME}/.ssh/${CFN_KEYPAIR}.pem ec2-user@\"$ip" hostname'
+                            echo "Postgresql is reachable with SSH."
+                            break
+                        }
+                        catch(Exception){
+                            echo "Could not connect to Postgresql with SSH, I will try again in 5 seconds"
+                            sleep(5)
+                        }
+                    }
                 }
             }
         }
