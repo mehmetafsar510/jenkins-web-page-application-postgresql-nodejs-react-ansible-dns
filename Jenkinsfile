@@ -157,14 +157,14 @@ pipeline{
 
                         if (ip.length() >= 7) {
                             echo "Postgresql Public Ip Address Found: $ip"
-                            env.POSTGRESQL_INSTANCE_PUBLİC_DNS = "$ip"
+                            env.POSTGRESQL_INSTANCE_PUBLIC_DNS = "$ip"
                             sleep(5)
                             break
                         }
                     }    
                 while(true) {
                         try{
-                            sh 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${JENKINS_HOME}/.ssh/${CFN_KEYPAIR}.pem ec2-user@\"$POSTGRESQL_INSTANCE_PUBLİC_DNS" hostname'
+                            sh 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${JENKINS_HOME}/.ssh/${CFN_KEYPAIR}.pem ec2-user@\"${POSTGRESQL_INSTANCE_PUBLIC_DNS}" hostname'
                             echo "Postgresql is reachable with SSH."
                             break
                         }
