@@ -150,8 +150,9 @@ pipeline{
                     }
                 while(true) {
                         ip = sh(script:'aws ec2 describe-instances --region ${AWS_REGION} --filters Name=tag-value,Values=ansible_postgresql  --query Reservations[*].Instances[*].[PublicDnsName] --output text | sed "s/\\s*None\\s*//g"', returnStdout:true).trim()
+                        env.POSTGRESQL_INSTANCE_PUBLİC_DNS = "$ip"
                         try{
-                            sh 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${JENKINS_HOME}/.ssh/${CFN_KEYPAIR}.pem ec2-user@\"$ip" hostname'
+                            sh 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${JENKINS_HOME}/.ssh/${CFN_KEYPAIR}.pem ec2-user@\"$POSTGRESQL_INSTANCE_PUBLİC_DNS" hostname'
                             echo "Postgresql is reachable with SSH."
                             break
                         }
