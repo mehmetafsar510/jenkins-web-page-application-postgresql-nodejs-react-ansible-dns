@@ -4,8 +4,8 @@ pipeline{
         PATH="/usr/local/bin/:${env.PATH}"
         CFN_KEYPAIR="deneme"
         AWS_REGION = "us-east-1"
-        FQDN = "clarus.mehmetafsar.com"
-        DOMAIN_NAME = "mehmetafsar.com"
+        FQDN = "clarus.mehmetafsar.net"
+        DOMAIN_NAME = "mehmetafsar.net"
         GIT_FOLDER = sh(script:'echo ${GIT_URL} | sed "s/.*\\///;s/.git$//"', returnStdout:true).trim()
     }
     stages{
